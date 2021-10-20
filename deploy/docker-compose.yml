@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   merchandise-service:
-    build: ..\
+    image: 'merchandise-service'
+    build:
+      context: ..\
+      dockerfile: Dockerfile
     hostname: merchandise-service
     ports:
       - "8080:80"
