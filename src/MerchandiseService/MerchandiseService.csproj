@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\MerchandiseService.Grpc\MerchandiseService.Grpc.csproj" />
       <ProjectReference Include="..\MerchandiseService.HttpModels\MerchandiseService.HttpModels.csproj" />
     </ItemGroup>
 

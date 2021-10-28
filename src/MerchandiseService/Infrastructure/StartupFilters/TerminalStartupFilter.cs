@@ -1,4 +1,5 @@
 using System;
+using MerchandiseService.GrpcServices;
 using MerchandiseService.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,7 +22,7 @@ namespace MerchandiseService.Infrastructure.StartupFilters
                 app.UseRouting();
                 app.UseEndpoints(endpoints =>
                 {
-                    //endpoints.MapGrpcService<MerchandiseGrpcService>();
+                    endpoints.MapGrpcService<MerchandiseGrpcService>();
                     endpoints.MapControllers();
                 });
                 next(app);
