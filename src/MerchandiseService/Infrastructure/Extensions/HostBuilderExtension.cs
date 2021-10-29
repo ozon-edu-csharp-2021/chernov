@@ -1,4 +1,5 @@
 using MerchandiseService.Infrastructure.Filters;
+using MerchandiseService.Infrastructure.Interceptors;
 using MerchandiseService.Infrastructure.StartupFilters;
 using MerchandiseService.Infrastructure.Swagger;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,8 @@ namespace MerchandiseService.Infrastructure.Extensions
             {
                 services.AddSingleton<IStartupFilter, TerminalStartupFilter>();
                 services.AddSingleton<IStartupFilter, SwaggerStartupFilter>();
+                
+                services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
 
                 services.AddSwaggerGen(options =>
                 {

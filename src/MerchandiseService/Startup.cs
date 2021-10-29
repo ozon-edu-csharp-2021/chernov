@@ -10,8 +10,7 @@ namespace MerchandiseService
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<Services.MerchandiseService, Services.MerchandiseService>();
-            services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
+            services.AddSingleton<Services.MerchandiseService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
