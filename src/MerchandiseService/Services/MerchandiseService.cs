@@ -3,11 +3,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MerchandiseService.Models;
-using MerchandiseService.Services.Interfaces;
 
 namespace MerchandiseService.Services
 {
-    public class MerchandiseService : IMerchandiseService
+    public class MerchandiseService
     {
         private readonly List<MerchOrder> MerchOrders =
             new List<MerchOrder>

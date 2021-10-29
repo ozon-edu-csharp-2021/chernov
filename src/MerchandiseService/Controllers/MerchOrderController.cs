@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MerchandiseService.HttpModels;
 using MerchandiseService.Models;
-using MerchandiseService.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MerchandiseService.Controllers
@@ -12,14 +11,14 @@ namespace MerchandiseService.Controllers
     [Produces("application/json")]
     public class MerchOrderController : ControllerBase
     {
-        private readonly IMerchandiseService _merchandiseService;
+        private readonly Services.MerchandiseService _merchandiseService;
 
-        public MerchOrderController(IMerchandiseService merchandiseService)
+        public MerchOrderController(Services.MerchandiseService merchandiseService)
         {
             _merchandiseService = merchandiseService;
         }
 
-        [HttpGet("{id:long}")]
+        [HttpGet("get/{id:long}")]
         public async Task<ActionResult<MerchOrder>> GetById(long id, CancellationToken token)
         {
             var merchOrder = await _merchandiseService.GetMerchOrderById(id, token);
@@ -27,7 +26,6 @@ namespace MerchandiseService.Controllers
             {
                 return NotFound();
             }
-
             return Ok(merchOrder);
         }
 

@@ -3,24 +3,23 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MerchandiseService.Grpc;
 using MerchandiseService.Models;
-using MerchandiseService.Services.Interfaces;
 
 namespace MerchandiseService.GrpcServices
 {
     public class MerchandiseGrpcService : MerchandiseGrpc.MerchandiseGrpcBase
     {
-        private readonly IMerchandiseService _merchandiseService;
+        private readonly Services.MerchandiseService _merchandiseService;
 
-        public MerchandiseGrpcService(IMerchandiseService merchandiseService)
+        public MerchandiseGrpcService(Services.MerchandiseService merchandiseService)
         {
             _merchandiseService = merchandiseService;
         }
 
-        public override async Task<GetMerchOrderByIdResponseUnit> GetMerchOrderById(GetMMerchOrderByIdRequest request,
+        public override async Task<GetMerchOrderByIdResponse> GetMerchOrderById(GetMerchOrderByIdRequest request,
             ServerCallContext context)
         {
             var merchOrder = await _merchandiseService.GetMerchOrderById(request.Id, context.CancellationToken);
-            return new GetMerchOrderByIdResponseUnit
+            return new GetMerchOrderByIdResponse
             {
                 Id = merchOrder.Id,
                 EmployeeId = merchOrder.EmployeeId,
