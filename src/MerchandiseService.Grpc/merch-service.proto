@@ -1,0 +1,26 @@
+syntax = "proto3";
+option csharp_namespace = "MerchandiseService.Grpc";
+package MerchandiseService;
+
+import "google/protobuf/empty.proto";
+
+service MerchandiseGrpc{
+  rpc AddMerchOrder (AddMerchOrderRequest) returns (google.protobuf.Empty);
+  rpc GetMerchOrderById (GetMerchOrderByIdRequest) returns (GetMerchOrderByIdResponse);
+}
+
+message AddMerchOrderRequest{
+  int64 employee_id = 1;
+  string status = 2;
+}
+
+message GetMerchOrderByIdRequest{
+  int64 id = 1;
+}
+
+
+message GetMerchOrderByIdResponse{
+  int64 id = 1;
+  int64 employee_id = 2;
+  string status = 3;
+}
