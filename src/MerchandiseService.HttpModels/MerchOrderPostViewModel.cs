@@ -4,6 +4,8 @@ namespace MerchandiseService.HttpModels
     {
         public long EmployeeId { get; set; }
         
-        public string Status { get; set; }
+        public int MerchPack { get; set; }
+        
+        public int? ClothingSize { get; set; }
     }
 }

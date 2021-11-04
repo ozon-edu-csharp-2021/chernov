@@ -1,6 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using MerchandiseService.HttpModels;
+using MerchandiseService.Infrastructure.Commands.CreateMerchOrder;
+using MerchandiseService.Infrastructure.Queries.MerchOrderAggregate;
 using MerchandiseService.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,21 +14,22 @@ namespace MerchandiseService.Controllers
     [Produces("application/json")]
     public class MerchOrderController : ControllerBase
     {
-        private readonly Services.MerchandiseService _merchandiseService;
+        private readonly IMediator _mediator;
 
-        public MerchOrderController(Services.MerchandiseService merchandiseService)
+        public MerchOrderController(IMediator mediator)
         {
-            _merchandiseService = merchandiseService;
+            _mediator = mediator;
         }
 
         [HttpGet("get/{id:long}")]
         public async Task<ActionResult<MerchOrder>> GetById(long id, CancellationToken token)
         {
-            var merchOrder = await _merchandiseService.GetMerchOrderById(id, token);
+            var merchOrder = await _mediator.Send(new GetMerchOrderByIdQuery {Id = id});
             if (merchOrder is null)
             {
                 return NotFound();
             }
+
             return Ok(merchOrder);
         }
 
@@ -33,12 +37,16 @@ namespace MerchandiseService.Controllers
         public async Task<ActionResult<MerchOrder>> Add(MerchOrderPostViewModel merchOrderPostViewModel,
             CancellationToken token)
         {
-            var createdMerchOrder = await _merchandiseService.AddMerchOrder(new MerchOrderCreationModel()
+            var createMerchOrderCommand = new CreateMerchOrderCommand
             {
                 EmployeeId = merchOrderPostViewModel.EmployeeId,
-                Status = merchOrderPostViewModel.Status
-            }, token);
-            return Ok(createdMerchOrder);
+                MerchPack = merchOrderPostViewModel.MerchPack,
+                ClothingSize = merchOrderPostViewModel.ClothingSize
+            };
+
+            var result = await _mediator.Send(createMerchOrderCommand, token);
+
+            return Ok(result);
         }
     }
 }
