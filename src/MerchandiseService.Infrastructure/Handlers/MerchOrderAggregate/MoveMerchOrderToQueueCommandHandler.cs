@@ -19,7 +19,7 @@ namespace MerchandiseService.Infrastructure.Handlers.MerchOrderAggregate
         public async Task<Unit> Handle(MoveMerchOrderToQueueCommand request, CancellationToken cancellationToken)
         {
             var merchOrder = await _merchOrderRepository.FindByIdAsync(request.MerchOrderId, cancellationToken);
-            if (merchOrder.Status != MerchOrderStatus.InProgress)
+            if (merchOrder.Status != MerchOrderStatus.CheckingItemAvailability)
             {
                 throw new Exception("Incorrect request status");
             }

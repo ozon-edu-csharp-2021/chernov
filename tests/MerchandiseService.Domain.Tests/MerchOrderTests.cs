@@ -27,7 +27,7 @@ namespace MerchandiseService.Domain.Tests
             merchOrder.CheckAvailability();
             
             //Assert
-            Assert.Equal(merchOrder.Status, MerchOrderStatus.InProgress);
+            Assert.Equal(merchOrder.Status, MerchOrderStatus.CheckingItemAvailability);
         }
         
         [Fact]

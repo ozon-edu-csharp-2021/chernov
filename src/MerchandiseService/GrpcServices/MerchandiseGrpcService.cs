@@ -8,9 +8,9 @@ namespace MerchandiseService.GrpcServices
 {
     public class MerchandiseGrpcService : MerchandiseGrpc.MerchandiseGrpcBase
     {
-        private readonly Services.MerchandiseService _merchandiseService;
+        private readonly global::MerchandiseService.Services.MerchandiseService _merchandiseService;
 
-        public MerchandiseGrpcService(Services.MerchandiseService merchandiseService)
+        public MerchandiseGrpcService(global::MerchandiseService.Services.MerchandiseService merchandiseService)
         {
             _merchandiseService = merchandiseService;
         }

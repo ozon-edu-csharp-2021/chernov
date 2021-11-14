@@ -11,7 +11,8 @@ namespace MerchandiseService.Infrastructure.Extensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(CreateMerchOrderCommandHandler).Assembly);
+            services.AddMediatR(typeof(MerchOrderCompleteCommandHandler).Assembly);
+            services.AddTransient<Services.MerchandiseService>();
             return services;
         }
 

@@ -6,7 +6,6 @@ using MerchandiseService.Domain.Events;
 
 namespace MerchandiseService.Infrastructure.Handlers.DomainEvent
 {
-    //отправка email сотруднику, что его мерч готов
     public class MerchOrderReadyToIssueDomainEventHandler : INotificationHandler<MerchOrderReadyToIssueDomainEvent>
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -18,6 +17,7 @@ namespace MerchandiseService.Infrastructure.Handlers.DomainEvent
 
         public Task Handle(MerchOrderReadyToIssueDomainEvent notification, CancellationToken cancellationToken)
         {
+            //TODO отправка email сотруднику, что его мерч готов
             throw new System.NotImplementedException();
         }
     }

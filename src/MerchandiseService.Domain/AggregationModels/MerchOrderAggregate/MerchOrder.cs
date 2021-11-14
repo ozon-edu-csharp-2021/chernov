@@ -1,4 +1,5 @@
 using System;
+using MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using MerchandiseService.Domain.Events;
 using MerchandiseService.Domain.Exceptions.MerchOrderAggregate;
 using MerchandiseService.Domain.Models;
@@ -13,9 +14,7 @@ namespace MerchandiseService.Domain.AggregationModels.MerchOrderAggregate
 
         public MerchPack MerchPack { get; }
 
-        public ClothingSize ClothingSize { get; private set; }
-
-        public Date DateOfIssue { get; private set; }
+        public DateTime DateOfIssue { get; private set; }
 
         public MerchOrder(long employeeId, MerchPack merchPack)
         {
@@ -24,14 +23,9 @@ namespace MerchandiseService.Domain.AggregationModels.MerchOrderAggregate
             Status = MerchOrderStatus.Created;
         }
 
-        public void SetClothingSize(ClothingSize clothingSize)
-        {
-            ClothingSize = clothingSize;
-        }
-
         public void MoveToQueue()
         {
-            if (Status != MerchOrderStatus.InProgress)
+            if (Status != MerchOrderStatus.CheckingItemAvailability)
             {
                 throw new IncorrectOrderStatusException("Status should be InProgress");
             }
@@ -46,25 +40,19 @@ namespace MerchandiseService.Domain.AggregationModels.MerchOrderAggregate
                 throw new IncorrectOrderStatusException("Status should be Created or InQueueForIssue");
             }
 
-            if (MerchPack.IsNeedSize && ClothingSize == null)
-            {
-                throw new ClothingSizeException("Size must be specified");
-            }
-
-            Status = MerchOrderStatus.InProgress;
-            AddMerchOrderFormedDomainEvent(Id, MerchPack, ClothingSize);
+            Status = MerchOrderStatus.CheckingItemAvailability;
+            AddMerchOrderFormedDomainEvent(Id, MerchPack);
         }
 
         public void Complete()
         {
-            if (Status != MerchOrderStatus.InProgress)
+            if (Status != MerchOrderStatus.CheckingItemAvailability)
             {
                 throw new IncorrectOrderStatusException("Status should be InProgress");
             }
 
             Status = MerchOrderStatus.Done;
-            var currentDate = DateTime.Today;
-            DateOfIssue = new Date(currentDate.Day, currentDate.Month, currentDate.Year);
+            DateOfIssue = DateTime.Today;
             AddMerchOrderReadyToIssueDomainEvent(EmployeeId);
         }
 
@@ -74,9 +62,9 @@ namespace MerchandiseService.Domain.AggregationModels.MerchOrderAggregate
             this.AddDomainEvent(merchOrderReadyToIssueDomainEvent);
         }
 
-        private void AddMerchOrderFormedDomainEvent(long merchOrderId, MerchPack merchPack, ClothingSize clothingSize)
+        private void AddMerchOrderFormedDomainEvent(long merchOrderId, MerchPack merchPack)
         {
-            var merchOrderFormedDomainEvent = new MerchOrderFormedDomainEvent(merchOrderId, merchPack, clothingSize);
+            var merchOrderFormedDomainEvent = new MerchOrderFormedDomainEvent(merchOrderId, merchPack);
             this.AddDomainEvent(merchOrderFormedDomainEvent);
         }
     }

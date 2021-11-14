@@ -11,6 +11,6 @@ namespace MerchandiseService.Domain.AggregationModels.EmployeeAggregate
         
         Task<Employee> FindByEmailAsync(string email, CancellationToken cancellationToken = default);
         
-        Task<ICollection<Employee>> GetAllEmployees(CancellationToken cancellationToken = default);
+        Task<List<Employee>> GetAllEmployees(CancellationToken cancellationToken = default);
     }
 }

@@ -15,10 +15,12 @@ namespace MerchandiseService.Controllers
     public class MerchOrderController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly Infrastructure.Services.MerchandiseService _merchandiseService;
 
-        public MerchOrderController(IMediator mediator)
+        public MerchOrderController(IMediator mediator, Infrastructure.Services.MerchandiseService merchandiseService)
         {
             _mediator = mediator;
+            _merchandiseService = merchandiseService;
         }
 
         [HttpGet("get/{id:long}")]
@@ -40,11 +42,10 @@ namespace MerchandiseService.Controllers
             var createMerchOrderCommand = new CreateMerchOrderCommand
             {
                 EmployeeId = merchOrderPostViewModel.EmployeeId,
-                MerchPack = merchOrderPostViewModel.MerchPack,
-                ClothingSize = merchOrderPostViewModel.ClothingSize
+                MerchPack = merchOrderPostViewModel.MerchPack
             };
-
-            var result = await _mediator.Send(createMerchOrderCommand, token);
+            var result = await  _merchandiseService.CreateMerchOrder(createMerchOrderCommand, token);
+            //var result = await _mediator.Send(createMerchOrderCommand, token);
 
             return Ok(result);
         }
