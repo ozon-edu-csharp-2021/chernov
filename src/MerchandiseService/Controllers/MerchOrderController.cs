@@ -45,7 +45,6 @@ namespace MerchandiseService.Controllers
                 MerchPack = merchOrderPostViewModel.MerchPack
             };
             var result = await  _merchandiseService.CreateMerchOrder(createMerchOrderCommand, token);
-            //var result = await _mediator.Send(createMerchOrderCommand, token);
 
             return Ok(result);
         }
