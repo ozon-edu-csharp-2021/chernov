@@ -1,4 +1,5 @@
 using MerchandiseService.GrpcServices;
+using MerchandiseService.Infrastructure.Extensions;
 using MerchandiseService.Infrastructure.Interceptors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +11,8 @@ namespace MerchandiseService
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<Services.MerchandiseService>();
+            services.AddInfrastructureServices();
+            services.AddInfrastructureRepositories();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
