@@ -1,3 +1,4 @@
+using MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using MerchandiseService.Domain.AggregationModels.MerchOrderAggregate;
 using MerchandiseService.Domain.Exceptions.MerchOrderAggregate;
 using Xunit;
@@ -10,31 +11,22 @@ namespace MerchandiseService.Domain.Tests
         public void CheckAvailability()
         {
             //Arrange 
-            var merchOrder = new MerchOrder(0, MerchPack.VeteranPack);
+            var employeeName = new EmployeeName("firstName1", "lastName1", "middleName1");
+            var employeeEmail = Email.Create("employeeEmail1@gmail.com");
+            var merchOrder = new MerchOrder(new Employee(employeeName, employeeEmail, ClothingSize.M), MerchPack.VeteranPack);
             //Act
             
             //Assert
             Assert.Throws<ClothingSizeException>(() => merchOrder.CheckAvailability());
         }
-        
-        [Fact]
-        public void CheckAvailabilityMerchPackWithoutSize()
-        {
-            //Arrange 
-            var merchOrder = new MerchOrder(0, MerchPack.WelcomePack);
-            
-            //Act
-            merchOrder.CheckAvailability();
-            
-            //Assert
-            Assert.Equal(merchOrder.Status, MerchOrderStatus.CheckingItemAvailability);
-        }
-        
+
         [Fact]
         public void Complete()
         {
             //Arrange 
-            var merchOrder = new MerchOrder(0, MerchPack.VeteranPack);
+            var employeeName = new EmployeeName("firstName1", "lastName1", "middleName1");
+            var employeeEmail = Email.Create("employeeEmail1@gmail.com");
+            var merchOrder = new MerchOrder(new Employee(employeeName, employeeEmail, ClothingSize.M), MerchPack.VeteranPack);
             //Act
             
             //Assert
@@ -45,7 +37,9 @@ namespace MerchandiseService.Domain.Tests
         public void MoveToQueue()
         {
             //Arrange 
-            var merchOrder = new MerchOrder(0, MerchPack.VeteranPack);
+            var employeeName = new EmployeeName("firstName1", "lastName1", "middleName1");
+            var employeeEmail = Email.Create("employeeEmail1@gmail.com");
+            var merchOrder = new MerchOrder(new Employee(employeeName, employeeEmail, ClothingSize.M), MerchPack.VeteranPack);
             //Act
             
             //Assert

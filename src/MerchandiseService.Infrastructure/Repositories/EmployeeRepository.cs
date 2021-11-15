@@ -10,7 +10,7 @@ namespace MerchandiseService.Infrastructure.Repositories
 {
     public class EmployeeRepository : IEmployeeRepository
     {
-        private readonly List<Employee> Employees =
+        public static readonly List<Employee> Employees =
             new List<Employee>
             {
                 new Employee(new EmployeeName("firstName1", "lastName1", "middleName1"), Email.Create("employee1@gmail.com"),ClothingSize.M ),

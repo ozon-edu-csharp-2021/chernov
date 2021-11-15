@@ -25,11 +25,12 @@ namespace MerchandiseService.Infrastructure.Services
 
         public async Task<int> CreateMerchOrder(CreateMerchOrderCommand request, CancellationToken cancellationToken)
         {
-            if (!CheckEmployeeExist(request.EmployeeId))
+            var employee = await _employeeRepository.FindByIdAsync(request.EmployeeId);
+            if (employee == null)
             {
                 throw new Exception("Employee does not exist");
             }
-            
+
             var orders = await _merchOrderRepository.FindByEmployeeIdAsync(request.EmployeeId, cancellationToken);
             orders = orders.Where(it => it.MerchPack.Id == request.MerchPack).ToList();
 
@@ -44,7 +45,7 @@ namespace MerchandiseService.Infrastructure.Services
             }
             
             var newMerchOrder =
-                new MerchOrder(request.EmployeeId,
+                new MerchOrder(employee,
                     Enumeration.GetAll<MerchPack>().FirstOrDefault(it => it.Id.Equals(request.MerchPack)));
 
             newMerchOrder.CheckAvailability();
@@ -72,12 +73,6 @@ namespace MerchandiseService.Infrastructure.Services
                 return true;
             }
             return false;
-        }
-
-        private bool CheckEmployeeExist(long id)
-        {
-            var employee = _employeeRepository.FindByIdAsync(id);
-            return employee != null;
         }
     }
 }

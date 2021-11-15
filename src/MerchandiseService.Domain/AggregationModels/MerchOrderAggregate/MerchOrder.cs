@@ -10,15 +10,18 @@ namespace MerchandiseService.Domain.AggregationModels.MerchOrderAggregate
     {
         public MerchOrderStatus Status { get; private set; }
 
+        public Employee Employee { get; }
+        
         public long EmployeeId { get; }
 
         public MerchPack MerchPack { get; }
 
         public DateTime DateOfIssue { get; private set; }
 
-        public MerchOrder(long employeeId, MerchPack merchPack)
+        public MerchOrder(Employee employee, MerchPack merchPack)
         {
-            EmployeeId = employeeId;
+            Employee = employee;
+            EmployeeId = employee.Id;
             MerchPack = merchPack;
             Status = MerchOrderStatus.Created;
         }
@@ -27,7 +30,7 @@ namespace MerchandiseService.Domain.AggregationModels.MerchOrderAggregate
         {
             if (Status != MerchOrderStatus.CheckingItemAvailability)
             {
-                throw new IncorrectOrderStatusException("Status should be InProgress");
+                throw new IncorrectOrderStatusException("Status should be CheckingItemAvailability");
             }
 
             Status = MerchOrderStatus.InQueueForIssue;
@@ -41,30 +44,30 @@ namespace MerchandiseService.Domain.AggregationModels.MerchOrderAggregate
             }
 
             Status = MerchOrderStatus.CheckingItemAvailability;
-            AddMerchOrderFormedDomainEvent(Id, MerchPack);
+            AddMerchOrderFormedDomainEvent(Id);
         }
 
         public void Complete()
         {
             if (Status != MerchOrderStatus.CheckingItemAvailability)
             {
-                throw new IncorrectOrderStatusException("Status should be InProgress");
+                throw new IncorrectOrderStatusException("Status should be CheckingItemAvailability");
             }
 
             Status = MerchOrderStatus.Done;
             DateOfIssue = DateTime.Today;
-            AddMerchOrderReadyToIssueDomainEvent(EmployeeId);
+            AddMerchOrderReadyToIssueDomainEvent(Employee, MerchPack);
         }
 
-        private void AddMerchOrderReadyToIssueDomainEvent(long employeeId)
+        private void AddMerchOrderReadyToIssueDomainEvent(Employee employee, MerchPack merchPack)
         {
-            var merchOrderReadyToIssueDomainEvent = new MerchOrderReadyToIssueDomainEvent(employeeId);
+            var merchOrderReadyToIssueDomainEvent = new MerchOrderReadyToIssueDomainEvent(employee, merchPack);
             this.AddDomainEvent(merchOrderReadyToIssueDomainEvent);
         }
 
-        private void AddMerchOrderFormedDomainEvent(long merchOrderId, MerchPack merchPack)
+        private void AddMerchOrderFormedDomainEvent(long merchOrderId)
         {
-            var merchOrderFormedDomainEvent = new MerchOrderFormedDomainEvent(merchOrderId, merchPack);
+            var merchOrderFormedDomainEvent = new MerchOrderFormedDomainEvent(merchOrderId);
             this.AddDomainEvent(merchOrderFormedDomainEvent);
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -8,17 +9,16 @@ namespace MerchandiseService.Infrastructure.Handlers.DomainEvent
 {
     public class MerchOrderReadyToIssueDomainEventHandler : INotificationHandler<MerchOrderReadyToIssueDomainEvent>
     {
-        private readonly IEmployeeRepository _employeeRepository;
-
-        public MerchOrderReadyToIssueDomainEventHandler(IEmployeeRepository employeeRepository)
+        public async Task Handle(MerchOrderReadyToIssueDomainEvent notification, CancellationToken cancellationToken)
         {
-            _employeeRepository = employeeRepository;
+            string message = $"Мерч {notification.MerchPack.Name} готов к выдаче";
+            SendEmail(notification.Employee.Email, message);
         }
 
-        public Task Handle(MerchOrderReadyToIssueDomainEvent notification, CancellationToken cancellationToken)
+        private void SendEmail(Email email, string message)
         {
             //TODO отправка email сотруднику, что его мерч готов
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

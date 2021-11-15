@@ -4,9 +4,9 @@ namespace MerchandiseService.Domain.AggregationModels.EmployeeAggregate
 {
     public class Employee : Entity
     {
-        private EmployeeName Name;
-        private Email Email;
-        private ClothingSize ClothingSize;
+        public EmployeeName Name { get; }
+        public Email Email { get; private set; }
+        public ClothingSize ClothingSize { get; private set; }
 
         public Employee(EmployeeName name, Email email, ClothingSize clothingSize)
         {

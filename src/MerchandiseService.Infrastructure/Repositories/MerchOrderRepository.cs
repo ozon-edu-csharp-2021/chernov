@@ -13,10 +13,10 @@ namespace MerchandiseService.Infrastructure.Repositories
         private readonly List<MerchOrder> MerchOrders =
             new List<MerchOrder>
             {
-                new MerchOrder(1, MerchPack.StarterPack),
-                new MerchOrder(2, MerchPack.VeteranPack),
-                new MerchOrder(2, MerchPack.ConferenceSpeakerPack),
-                new MerchOrder(3, MerchPack.WelcomePack)
+                new MerchOrder(EmployeeRepository.Employees[0], MerchPack.StarterPack),
+                new MerchOrder(EmployeeRepository.Employees[1], MerchPack.VeteranPack),
+                new MerchOrder(EmployeeRepository.Employees[2], MerchPack.ConferenceSpeakerPack),
+                new MerchOrder(EmployeeRepository.Employees[3], MerchPack.WelcomePack)
             };
 
 

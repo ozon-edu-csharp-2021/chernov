@@ -1,14 +1,19 @@
 using MediatR;
+using MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
+using MerchandiseService.Domain.AggregationModels.MerchOrderAggregate;
 
 namespace MerchandiseService.Domain.Events
 {
     public class MerchOrderReadyToIssueDomainEvent : INotification
     {
-        public long EmployeeId { get; }
+        public Employee Employee { get; }
+        
+        public MerchPack MerchPack { get; }
 
-        public MerchOrderReadyToIssueDomainEvent(long employeeId)
+        public MerchOrderReadyToIssueDomainEvent(Employee employee, MerchPack merchPack)
         {
-            EmployeeId = employeeId;
+            Employee = employee;
+            MerchPack = merchPack;
         }
     }
 }

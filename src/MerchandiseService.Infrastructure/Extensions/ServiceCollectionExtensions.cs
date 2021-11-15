@@ -1,7 +1,7 @@
 using MediatR;
 using MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using MerchandiseService.Domain.AggregationModels.MerchOrderAggregate;
-using MerchandiseService.Infrastructure.Handlers.MerchOrderAggregate;
+using MerchandiseService.Infrastructure.Handlers.DomainEvent;
 using MerchandiseService.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +11,7 @@ namespace MerchandiseService.Infrastructure.Extensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(MerchOrderCompleteCommandHandler).Assembly);
+            services.AddMediatR(typeof(MerchOrderFormedDomainEventHandler).Assembly);
             services.AddTransient<Services.MerchandiseService>();
             return services;
         }
