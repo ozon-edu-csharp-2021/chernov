@@ -14,7 +14,7 @@ namespace MerchandiseService.Infrastructure.Handlers.Queries
         {
             _merchOrderRepository = merchOrderRepository;
         }
-        
+
         public async Task<MerchOrder> Handle(GetMerchOrderByIdQuery request, CancellationToken cancellationToken)
         {
             var merchOrder = await _merchOrderRepository.FindByIdAsync(request.Id);

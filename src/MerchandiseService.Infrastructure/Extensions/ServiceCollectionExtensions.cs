@@ -3,6 +3,7 @@ using MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using MerchandiseService.Domain.AggregationModels.MerchOrderAggregate;
 using MerchandiseService.Infrastructure.Handlers.DomainEvent;
 using MerchandiseService.Infrastructure.Repositories;
+using MerchandiseService.Infrastructure.Repositories.Implementation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MerchandiseService.Infrastructure.Extensions

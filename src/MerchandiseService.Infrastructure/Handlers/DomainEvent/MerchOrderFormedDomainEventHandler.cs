@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using MerchandiseService.Domain.AggregationModels.MerchOrderAggregate;
+using MerchandiseService.Domain.Contracts;
 using MerchandiseService.Domain.Events;
 
 namespace MerchandiseService.Infrastructure.Handlers.DomainEvent
@@ -9,16 +10,18 @@ namespace MerchandiseService.Infrastructure.Handlers.DomainEvent
     public class MerchOrderFormedDomainEventHandler : INotificationHandler<MerchOrderFormedDomainEvent>
     {
         private readonly IMerchOrderRepository _merchOrderRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public MerchOrderFormedDomainEventHandler(IMerchOrderRepository merchOrderRepository)
+        public MerchOrderFormedDomainEventHandler(IMerchOrderRepository merchOrderRepository, IUnitOfWork unitOfWork)
         {
             _merchOrderRepository = merchOrderRepository;
+            _unitOfWork = unitOfWork;
         }
-        
+
         public async Task Handle(MerchOrderFormedDomainEvent notification, CancellationToken cancellationToken)
         {
             var merchOrder = await _merchOrderRepository.FindByIdAsync(notification.MerchOrderId, cancellationToken);
-            
+
             if (CheckAvailability(merchOrder))
             {
                 IssueMerch(merchOrder);
@@ -28,9 +31,9 @@ namespace MerchandiseService.Infrastructure.Handlers.DomainEvent
             {
                 merchOrder.MoveToQueue();
             }
-            
+
             await _merchOrderRepository.UpdateAsync(merchOrder);
-            await _merchOrderRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         private void IssueMerch(MerchOrder merchOrder)

@@ -8,20 +8,19 @@ namespace MerchandiseService.Domain.AggregationModels.MerchOrderAggregate
 {
     public class MerchOrder : Entity
     {
-        public MerchOrderStatus Status { get; private set; }
+        public MerchOrderStatus Status { get; set; }
 
-        public Employee Employee { get; }
+        public Employee Employee { get; set; }
         
         public long EmployeeId { get; }
 
         public MerchPack MerchPack { get; }
 
-        public DateTime DateOfIssue { get; private set; }
+        public DateTime DateOfIssue { get; set; }
 
-        public MerchOrder(Employee employee, MerchPack merchPack)
+        public MerchOrder(long employeeId, MerchPack merchPack)
         {
-            Employee = employee;
-            EmployeeId = employee.Id;
+            EmployeeId = employeeId;
             MerchPack = merchPack;
             Status = MerchOrderStatus.Created;
         }
