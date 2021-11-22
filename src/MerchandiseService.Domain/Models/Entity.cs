@@ -11,6 +11,11 @@ namespace MerchandiseService.Domain.Models
 
         private List<INotification> _domainEvents;
         public IReadOnlyCollection<INotification> DomainEvents => _domainEvents?.AsReadOnly();
+        
+        public void SetId(int id)
+        {
+            Id = id;
+        }
 
         public void AddDomainEvent(INotification eventItem)
         {

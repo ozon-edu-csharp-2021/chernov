@@ -8,14 +8,13 @@ namespace MerchandiseService.Migrator.Migrations
     {
         public override void Up()
         {
-            Execute.Sql(@"
-                CREATE TABLE if not exists merch_orders(
-                    id BIGSERIAL PRIMARY KEY,
-                    status INT NOT NULL,
-                    employee_id INT NOT NULL,
-                    merch_pack INT NOT NULL,
-                    date_of_issue date
-                );");
+            Create
+                .Table("merch_orders")
+                .WithColumn("id").AsInt64().Identity().PrimaryKey()
+                .WithColumn("status").AsInt32().NotNullable()
+                .WithColumn("employee_id").AsInt64().NotNullable()
+                .WithColumn("merch_pack").AsInt32().NotNullable()
+                .WithColumn("date_of_issue").AsDate().Nullable();
         }
 
         public override void Down()

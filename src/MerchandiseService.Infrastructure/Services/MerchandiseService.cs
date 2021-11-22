@@ -52,12 +52,13 @@ namespace MerchandiseService.Infrastructure.Services
                 new MerchOrder(request.EmployeeId,
                     Enumeration.GetAll<MerchPack>().FirstOrDefault(it => it.Id.Equals(request.MerchPack)));
             newMerchOrder.Employee = employee;
-
-            newMerchOrder.CheckAvailability();
-
+            
             var createResult = await _merchOrderRepository.CreateAsync(newMerchOrder, cancellationToken);
+            
+            newMerchOrder.CheckAvailability();
+            
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return newMerchOrder.Id;
+            return createResult.Id;
         }
 
         private bool CheckActiveOrders(List<MerchOrder> orders)

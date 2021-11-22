@@ -29,7 +29,7 @@ namespace MerchandiseService.Infrastructure.Repositories.Implementation
         {
             const string sql = @"
                 INSERT INTO merch_orders (status, employee_id, merch_pack)
-                VALUES (@Status, @EmployeeId, @MerchPack);";
+                VALUES (@Status, @EmployeeId, @MerchPack) RETURNING id;";
 
             var parameters = new
             {
@@ -44,7 +44,9 @@ namespace MerchandiseService.Infrastructure.Repositories.Implementation
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            await connection.ExecuteAsync(commandDefinition);
+            var id = await connection.QueryFirstAsync<int>(commandDefinition);
+            
+            itemToCreate.SetId(id);
             _changeTracker.Track(itemToCreate);
             return itemToCreate;
         }
@@ -72,6 +74,7 @@ namespace MerchandiseService.Infrastructure.Repositories.Implementation
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
+
             await connection.ExecuteAsync(commandDefinition);
             _changeTracker.Track(itemToUpdate);
             return itemToUpdate;
@@ -132,10 +135,9 @@ namespace MerchandiseService.Infrastructure.Repositories.Implementation
         {
             const string sql = @"
                                 SELECT merch_orders.id, merch_orders.status, merch_orders.employee_id, 
-                                       merch_orders.merch_pack, merch_orders.date_of_issue, 
-                                       employees.id, employees.first_name,
-                                       employees.last_name, employees.middle_name,
-                                       employees.email, employees.clothing_size
+                                           merch_orders.merch_pack, merch_orders.date_of_issue, employees.first_name,
+                                           employees.last_name, employees.middle_name,
+                                           employees.email, employees.clothing_size, employees.id
                                 FROM merch_orders
                                 INNER JOIN employees on merch_orders.employee_id = employees.id
                                 WHERE merch_orders.employee_id = @EmployeeId;";

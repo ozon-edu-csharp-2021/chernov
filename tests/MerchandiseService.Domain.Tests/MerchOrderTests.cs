@@ -13,7 +13,8 @@ namespace MerchandiseService.Domain.Tests
             //Arrange 
             var employeeName = new EmployeeName("firstName1", "lastName1", "middleName1");
             var employeeEmail = Email.Create("employeeEmail1@gmail.com");
-            var merchOrder = new MerchOrder(new Employee(employeeName, employeeEmail, ClothingSize.M), MerchPack.VeteranPack);
+            var merchOrder = new MerchOrder(1 , MerchPack.VeteranPack);
+            merchOrder.Employee = new Employee(employeeName, employeeEmail, ClothingSize.M);
             //Act
             
             //Assert
@@ -26,7 +27,8 @@ namespace MerchandiseService.Domain.Tests
             //Arrange 
             var employeeName = new EmployeeName("firstName1", "lastName1", "middleName1");
             var employeeEmail = Email.Create("employeeEmail1@gmail.com");
-            var merchOrder = new MerchOrder(new Employee(employeeName, employeeEmail, ClothingSize.M), MerchPack.VeteranPack);
+            var merchOrder = new MerchOrder(1, MerchPack.VeteranPack);
+            merchOrder.Employee = new Employee(employeeName, employeeEmail, ClothingSize.M);
             //Act
             
             //Assert
@@ -39,7 +41,8 @@ namespace MerchandiseService.Domain.Tests
             //Arrange 
             var employeeName = new EmployeeName("firstName1", "lastName1", "middleName1");
             var employeeEmail = Email.Create("employeeEmail1@gmail.com");
-            var merchOrder = new MerchOrder(new Employee(employeeName, employeeEmail, ClothingSize.M), MerchPack.VeteranPack);
+            var merchOrder = new MerchOrder(1, MerchPack.VeteranPack);
+            merchOrder.Employee = new Employee(employeeName, employeeEmail, ClothingSize.M);
             //Act
             
             //Assert

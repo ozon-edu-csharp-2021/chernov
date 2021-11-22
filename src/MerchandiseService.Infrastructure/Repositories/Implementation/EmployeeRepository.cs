@@ -27,7 +27,7 @@ namespace MerchandiseService.Infrastructure.Repositories.Implementation
         {
             const string sql = @"
                 INSERT INTO employees (first_name, last_name, middle_name, email, clothing_size)
-                VALUES (@FirstName, @LastName, @MiddleName, @Email, @ClothingSize);";
+                VALUES (@FirstName, @LastName, @MiddleName, @Email, @ClothingSize) RETURNING Id;";
 
             var parameters = new
             {
@@ -44,7 +44,8 @@ namespace MerchandiseService.Infrastructure.Repositories.Implementation
                 commandTimeout: Timeout,
                 cancellationToken: cancellationToken);
             var connection = await _dbConnectionFactory.CreateConnection(cancellationToken);
-            await connection.ExecuteAsync(commandDefinition);
+            var id = await connection.QueryFirstAsync<int>(commandDefinition);
+            itemToCreate.SetId(id);
             _changeTracker.Track(itemToCreate);
             return itemToCreate;
         }
