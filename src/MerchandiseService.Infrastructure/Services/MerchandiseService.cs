@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using MerchandiseService.Domain.AggregationModels.MerchOrderAggregate;
+using MerchandiseService.Domain.Contracts;
 using MerchandiseService.Domain.Models;
 using MerchandiseService.Infrastructure.Commands.CreateMerchOrder;
 
@@ -13,18 +14,21 @@ namespace MerchandiseService.Infrastructure.Services
     public class MerchandiseService
     {
         private readonly IMerchOrderRepository _merchOrderRepository;
-
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public MerchandiseService(IMerchOrderRepository merchOrderRepository,
-            IEmployeeRepository employeeRepository)
+            IEmployeeRepository employeeRepository, IUnitOfWork unitOfWork)
         {
             _merchOrderRepository = merchOrderRepository;
             _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<int> CreateMerchOrder(CreateMerchOrderCommand request, CancellationToken cancellationToken)
         {
+            await _unitOfWork.StartTransaction(cancellationToken);
+
             var employee = await _employeeRepository.FindByIdAsync(request.EmployeeId);
             if (employee == null)
             {
@@ -43,28 +47,32 @@ namespace MerchandiseService.Infrastructure.Services
             {
                 throw new Exception("In this year such merch has already been issued");
             }
-            
+
             var newMerchOrder =
-                new MerchOrder(employee,
+                new MerchOrder(request.EmployeeId,
                     Enumeration.GetAll<MerchPack>().FirstOrDefault(it => it.Id.Equals(request.MerchPack)));
-
-            newMerchOrder.CheckAvailability();
-
+            newMerchOrder.Employee = employee;
+            
             var createResult = await _merchOrderRepository.CreateAsync(newMerchOrder, cancellationToken);
-            await _merchOrderRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
-            return newMerchOrder.Id;
+            
+            newMerchOrder.CheckAvailability();
+            
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return createResult.Id;
         }
-        
+
         private bool CheckActiveOrders(List<MerchOrder> orders)
         {
             if (orders.Where(it => it.Status != MerchOrderStatus.Done).Any())
             {
                 return true;
             }
+
             return false;
         }
 
-        private bool CheckLastYearMerchIssue(List<MerchOrder> orders){
+        private bool CheckLastYearMerchIssue(List<MerchOrder> orders)
+        {
             var currentDate = DateTime.Today;
             if (orders.Where(it =>
                 currentDate.Subtract(it.DateOfIssue).Days <
@@ -72,6 +80,7 @@ namespace MerchandiseService.Infrastructure.Services
             {
                 return true;
             }
+
             return false;
         }
     }
